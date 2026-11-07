@@ -5,15 +5,15 @@ A plain-text list of 117 developer tools, each with its official installer: the 
 ## Usage
 
 ```bash
-./pick.sh                        # fuzzy picker (fzf), numbered menu if fzf is missing
-./pick.sh k8s                    # one category: ai lang shell editor cli infra k8s net cloud sec data mobile
-./pick.sh -m user                # home-folder installs only (hides the tools that can only install system-wide)
-./pick.sh -m system              # system-wide installs only
-./pick.sh -n go,kubectl,aws      # install by name, no menu
-./pick.sh -n go:system,helm:user # force a mode per tool
-./pick.sh -l                     # list tools with their available modes (✓ = already on PATH)
-./pick.sh -d ...                 # dry run: show the commands only
-./pick.sh -y ...                 # no prompts; tools with both modes default to user
+./curlup.sh                        # fuzzy picker (fzf), numbered menu if fzf is missing
+./curlup.sh k8s                    # one category: ai lang shell editor cli infra k8s net cloud sec data mobile
+./curlup.sh -m user                # home-folder installs only (hides the tools that can only install system-wide)
+./curlup.sh -m system              # system-wide installs only
+./curlup.sh -n go,kubectl,aws      # install by name, no menu
+./curlup.sh -n go:system,helm:user # force a mode per tool
+./curlup.sh -l                     # list tools with their available modes (✓ = already on PATH)
+./curlup.sh -d ...                 # dry run: show the commands only
+./curlup.sh -y ...                 # no prompts; tools with both modes default to user
 ```
 
 Before each install you're asked `[y/N/v]`. `v` opens the remote script in your pager so you can read it first.
@@ -31,18 +31,18 @@ Before each install you're asked `[y/N/v]`. `v` opens the remote script in your 
 ## Run it with curl
 
 1. Push this folder to GitHub as `curlup`.
-2. In `pick.sh`, set `REPO` near the top to `r4d01-ai/curlup`. The script fetches `installers.txt` from that repo.
+2. In `curlup.sh`, set `REPO` near the top to `r4d01-ai/curlup`. The script fetches `installers.txt` from that repo.
 3. Run it on any machine:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/r4d01-ai/curlup/main/pick.sh | bash
+curl -fsSL https://raw.githubusercontent.com/r4d01-ai/curlup/main/curlup.sh | bash
 ```
 
 Pass options after `bash -s --`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/r4d01-ai/curlup/main/pick.sh | bash -s -- -m user k8s
-curl -fsSL https://raw.githubusercontent.com/r4d01-ai/curlup/main/pick.sh | bash -s -- -y -n go,kubectl,aws,claude
+curl -fsSL https://raw.githubusercontent.com/r4d01-ai/curlup/main/curlup.sh | bash -s -- -m user k8s
+curl -fsSL https://raw.githubusercontent.com/r4d01-ai/curlup/main/curlup.sh | bash -s -- -y -n go,kubectl,aws,claude
 ```
 
 Prompts, the fzf picker and installers that ask questions all read from your terminal, so the interactive mode works through the pipe. If there's no terminal, e.g. in CI or cloud-init, use `-y -n …`.
@@ -59,7 +59,7 @@ Add one line per install mode to `installers.txt`:
 
 - To offer both modes, add two lines with the same name.
 - Columns are separated by whitespace, and everything after the mode is the command.
-- Commands can use `$OS` (`linux`/`darwin`) and `$ARCH` (`amd64`/`arm64`), which `pick.sh` sets before running them.
+- Commands can use `$OS` (`linux`/`darwin`) and `$ARCH` (`amd64`/`arm64`), which `curlup.sh` sets before running them.
 - Use the binary's name as `<name>` so the ✓ marker works.
 
 ## Notes

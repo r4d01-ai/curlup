@@ -6,12 +6,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: shellcheck pick.sh
-        run: shellcheck -S warning pick.sh
+      - name: shellcheck curlup.sh
+        run: shellcheck -S warning curlup.sh
       - name: installers.txt parses cleanly
         run: |
-          out=$(./pick.sh -l 2>&1)
+          out=$(./curlup.sh -l 2>&1)
           if grep -q 'Skipping malformed' <<< "$out"; then echo "$out" | grep 'Skipping'; exit 1; fi
           echo "$(grep -c . <<< "$out") tools OK"
       - name: works through curl | bash
-        run: cat pick.sh | bash -s -- -f installers.txt -d -n uv,kubectl:system
+        run: cat curlup.sh | bash -s -- -f installers.txt -d -n uv,kubectl:system

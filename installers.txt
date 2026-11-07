@@ -1,12 +1,12 @@
 # curl-installers: one install method per line
 # Format:  <name>  <category>  <mode>  <command...>
 #   - mode is "user" (installs into your home dir, no sudo) or "system" (system-wide, needs root)
-#   - a tool can have two lines, one per mode; pick.sh asks which one you want
+#   - a tool can have two lines, one per mode; curlup.sh asks which one you want
 #   - name, category and mode must not contain spaces; everything after them is the command
 #   - name should match the binary it installs, so the picker can mark it as installed
 #   - lines starting with # are ignored
 # Only official installers or official release downloads from each project: no third-party install services.
-# Commands may use $OS (linux|darwin) and $ARCH (amd64|arm64); pick.sh sets them before running.
+# Commands may use $OS (linux|darwin) and $ARCH (amd64|arm64); curlup.sh sets them before running.
 
 # ---- AI coding agents ----
 claude          ai      user    curl -fsSL https://claude.ai/install.sh | bash

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# pick.sh: choose tools from installers.txt and run their official installers.
+# curlup.sh: choose tools from installers.txt and run their official installers.
 # Run it straight from GitHub:
-#   curl -fsSL https://raw.githubusercontent.com/r4d01-ai/curlup/main/pick.sh | bash
-#   curl -fsSL .../pick.sh | bash -s -- -n go,kubectl,aws      # pass options after "bash -s --"
-# or from a clone:  ./pick.sh [options] [category]
+#   curl -fsSL https://raw.githubusercontent.com/r4d01-ai/curlup/main/curlup.sh | bash
+#   curl -fsSL .../curlup.sh | bash -s -- -n go,kubectl,aws      # pass options after "bash -s --"
+# or from a clone:  ./curlup.sh [options] [category]
 #
 # The whole script is wrapped in main() and called on the last line, so bash reads all of it
 # before running anything. That keeps "curl | bash" safe even if an installer reads stdin, and
@@ -18,7 +18,7 @@ INSTALLERS_URL="${INSTALLERS_URL:-https://raw.githubusercontent.com/$REPO/$BRANC
 
 usage() {
   cat <<'USAGE'
-Usage: pick.sh [options] [category]
+Usage: curlup.sh [options] [category]
 
   (no options)          interactive picker (fzf if present, numbered menu otherwise)
   CATEGORY              only show one category: ai lang shell editor cli infra k8s net cloud sec data mobile
@@ -34,7 +34,7 @@ Tools with both a user (home folder, no sudo) and a system (system-wide, sudo) i
 ask which one you want, unless -m or name:mode decides it.
 
 Via curl, pass options after "bash -s --":
-  curl -fsSL https://raw.githubusercontent.com/<repo>/main/pick.sh | bash -s -- -m user k8s
+  curl -fsSL https://raw.githubusercontent.com/<repo>/main/curlup.sh | bash -s -- -m user k8s
 USAGE
   exit "${1:-0}"
 }
@@ -75,7 +75,7 @@ fi
 FILE=${FILE:-$INSTALLERS_URL}
 if [[ $FILE =~ ^(https?|file):// ]]; then
   if [[ $FILE == *YOUR_GITHUB_USER* ]]; then
-    echo "Set REPO at the top of pick.sh (or export CURL_INSTALLERS_REPO=user/repo) to point at your GitHub repo." >&2; exit 1
+    echo "Set REPO at the top of curlup.sh (or export CURL_INSTALLERS_REPO=user/repo) to point at your GitHub repo." >&2; exit 1
   fi
   tmp="$(mktemp)"; trap 'rm -f "$tmp"' EXIT
   curl -fsSL "$FILE" -o "$tmp" || { echo "Could not download $FILE" >&2; exit 1; }
