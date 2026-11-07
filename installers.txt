@@ -35,6 +35,7 @@
 # ---- AI coding agents ----
 claude          ai      user    https://www.anthropic.com/claude-code    curl -fsSL https://claude.ai/install.sh | bash
 codex           ai      user    https://github.com/openai/codex          curl -fsSL https://chatgpt.com/codex/install.sh | sh
+opencode        ai      user    https://opencode.ai                      curl -fsSL https://opencode.ai/install | bash
 ollama          ai      system  https://ollama.com                       curl -fsSL https://ollama.com/install.sh | sh
 # ---- Languages, runtimes, version managers ----
 rust            lang    user    https://rustup.rs                        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh

@@ -25,7 +25,7 @@ and choose tools to install, deciding per tool between a **user** install (home 
 - `README.md`: user docs.
 - `.github/workflows/check.yml`: CI that runs shellcheck, checks that the list parses, and does a dry run through `cat curlup.sh | bash`.
 
-The list is kept short on purpose (16 tools, chosen by the user). Removed tools are in git history: the 41-tool list at commit 54318ad, and the original 117 at commit 8a147fb.
+The list is kept short on purpose (17 tools, chosen by the user). Removed tools are in git history: the 41-tool list at commit 54318ad, and the original 117 at commit 8a147fb.
 
 ## Decisions already made (keep them)
 
