@@ -24,7 +24,7 @@ and choose tools to install, deciding per tool between a **user** install (home 
 - `README.md`: user docs.
 - `.github/workflows/check.yml`: CI that runs shellcheck, checks that the list parses, and does a dry run through `cat curlup.sh | bash`.
 
-The list is kept short on purpose (38 tools). Removed tools are in git history up to commit 8a147fb and can be restored if needed.
+The list is kept short on purpose (14 tools, chosen by the user). Removed tools are in git history: the 41-tool list at commit 54318ad, and the original 117 at commit 8a147fb.
 
 ## Decisions already made (keep them)
 
@@ -39,16 +39,15 @@ The list is kept short on purpose (38 tools). Removed tools are in git history u
 - **Repo chosen: `r4d01-ai/curlup`.** `REPO` in `curlup.sh` and the README examples point there. Keep them in sync if the repo moves.
 - **Homepage URLs were written from memory and not checked in the sandbox** (most hosts were unreachable). Check them before relying on them.
 - **Commands never run end to end.** Downloads were blocked in the original environment. Smoke-test in a disposable container in both modes: go, kubectl, minikube, terraform (its version lookup uses HashiCorp's checkpoint API `current_version` field, the least certain), and most non-GitHub-hosted scripts.
-- **Already installed for real in user mode, and working:** kind, k9s, yt-dlp.
 
 ## How to test
 
 ```bash
 shellcheck -S warning curlup.sh
 ./curlup.sh -l                          # parses the list; no "Skipping malformed" lines
-./curlup.sh -d -n go:system,aws,kind    # dry run
-cat curlup.sh | bash -s -- -f installers.txt -d -n uv,kubectl:system   # pipe path
-HOME=$(mktemp -d) ./curlup.sh -y -n kind   # real user-mode install into a throwaway home
+./curlup.sh -d -n go:system,aws,kubectl    # dry run
+cat curlup.sh | bash -s -- -f installers.txt -d -n go,kubectl:system   # pipe path
+HOME=$(mktemp -d) ./curlup.sh -y -n kubectl   # real user-mode install into a throwaway home
 ```
 
 To test the full curl path locally, serve the folder with `python3 -m http.server 8765` and run:

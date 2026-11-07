@@ -14,4 +14,4 @@ jobs:
           if grep -q 'Skipping malformed' <<< "$out"; then echo "$out" | grep 'Skipping'; exit 1; fi
           echo "$(grep -c . <<< "$out") tools OK"
       - name: works through curl | bash
-        run: cat curlup.sh | bash -s -- -f installers.txt -d -n uv,kubectl:system
+        run: cat curlup.sh | bash -s -- -f installers.txt -d -n go,kubectl:system

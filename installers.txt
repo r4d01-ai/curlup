@@ -14,76 +14,33 @@
 @bin  rust          rustc cargo
 @bin  vscode        code
 @bin  brave         brave-browser
-@bin  flyctl        fly
 
 # ---- AI coding agents ----
 claude          ai      user    https://www.anthropic.com/claude-code    curl -fsSL https://claude.ai/install.sh | bash
 codex           ai      user    https://github.com/openai/codex          curl -fsSL https://chatgpt.com/codex/install.sh | sh
-opencode        ai      user    https://opencode.ai                      curl -fsSL https://opencode.ai/install | bash
-copilot         ai      user    https://github.com/features/copilot      curl -fsSL https://gh.io/copilot-install | bash
-copilot         ai      system  https://github.com/features/copilot      curl -fsSL https://gh.io/copilot-install | sudo bash
-aider           ai      user    https://aider.chat                       curl -LsSf https://aider.chat/install.sh | sh
-vibe            ai      user    https://docs.mistral.ai/vibe/code/cli/   curl -LsSf https://mistral.ai/vibe/install.sh | bash
 # ---- Languages, runtimes, version managers ----
-uv              lang    user    https://docs.astral.sh/uv/               curl -LsSf https://astral.sh/uv/install.sh | sh
 rust            lang    user    https://rustup.rs                        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-bun             lang    user    https://bun.sh                           curl -fsSL https://bun.sh/install | bash
-deno            lang    user    https://deno.com                         curl -fsSL https://deno.land/install.sh | sh
-fnm             lang    user    https://github.com/Schniz/fnm            curl -fsSL https://fnm.vercel.app/install | bash
-mise            lang    user    https://mise.jdx.dev                     curl https://mise.run | sh
 go              lang    user    https://go.dev                           v=$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1) && rm -rf ~/.local/go && mkdir -p ~/.local && curl -fsSL "https://go.dev/dl/$v.$OS-$ARCH.tar.gz" | tar -C ~/.local -xz && echo 'Add ~/.local/go/bin (and ~/go/bin) to your PATH'
 go              lang    system  https://go.dev                           v=$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1) && sudo rm -rf /usr/local/go && curl -fsSL "https://go.dev/dl/$v.$OS-$ARCH.tar.gz" | sudo tar -C /usr/local -xz && echo 'Add /usr/local/go/bin (and ~/go/bin) to your PATH'
-# ---- Shell, prompt, dotfiles ----
-brew            shell   system  https://brew.sh                          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-starship        shell   user    https://starship.rs                      curl -sS https://starship.rs/install.sh | sh
-zoxide          shell   user    https://github.com/ajeetdsouza/zoxide    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-zoxide          shell   system  https://github.com/ajeetdsouza/zoxide    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh -s -- --bin-dir /usr/local/bin
-atuin           shell   user    https://atuin.sh                         curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
-chezmoi         shell   user    https://www.chezmoi.io                   sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin
-chezmoi         shell   system  https://www.chezmoi.io                   sudo sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
-direnv          shell   user    https://direnv.net                       curl -sfL https://direnv.net/install.sh | bash
 # ---- Editors & terminals ----
-zed             editor  user    https://zed.dev                          curl -f https://zed.dev/install.sh | sh
 vscode          editor  user    https://code.visualstudio.com            mkdir -p ~/.local/share ~/.local/bin && curl -fsSL "https://code.visualstudio.com/sha/download?build=stable&os=linux-x64" | tar -xz -C ~/.local/share && ln -sfn ~/.local/share/VSCode-linux-x64/bin/code ~/.local/bin/code
-just            cli     user    https://just.systems                     curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin
-just            cli     system  https://just.systems                     curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
-task            cli     user    https://taskfile.dev                     sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-task            cli     system  https://taskfile.dev                     sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-yt-dlp          cli     user    https://github.com/yt-dlp/yt-dlp         mkdir -p ~/.local/bin && curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && chmod a+rx ~/.local/bin/yt-dlp
-yt-dlp          cli     system  https://github.com/yt-dlp/yt-dlp         sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && sudo chmod a+rx /usr/local/bin/yt-dlp
-ruff            cli     user    https://docs.astral.sh/ruff/             curl -LsSf https://astral.sh/ruff/install.sh | sh
-# ---- Containers & infra ----
-docker          infra   user    https://www.docker.com                   curl -fsSL https://get.docker.com/rootless | sh
-docker          infra   system  https://www.docker.com                   curl -fsSL https://get.docker.com | sh
-lazydocker      infra   user    https://github.com/jesseduffield/lazydocker curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
-lazydocker      infra   system  https://github.com/jesseduffield/lazydocker curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | sudo DIR=/usr/local/bin bash
 # ---- Kubernetes ----
 kubectl         k8s     user    https://kubernetes.io/docs/reference/kubectl/ mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/kubectl "https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/release/stable.txt)/bin/$OS/$ARCH/kubectl" && chmod +x ~/.local/bin/kubectl
 kubectl         k8s     system  https://kubernetes.io/docs/reference/kubectl/ curl -fsSLo /tmp/kubectl "https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/release/stable.txt)/bin/$OS/$ARCH/kubectl" && sudo install -m 755 /tmp/kubectl /usr/local/bin/kubectl
-kind            k8s     user    https://kind.sigs.k8s.io                 mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/kind "https://github.com/kubernetes-sigs/kind/releases/latest/download/kind-$OS-$ARCH" && chmod +x ~/.local/bin/kind
-kind            k8s     system  https://kind.sigs.k8s.io                 curl -fsSLo /tmp/kind "https://github.com/kubernetes-sigs/kind/releases/latest/download/kind-$OS-$ARCH" && sudo install -m 755 /tmp/kind /usr/local/bin/kind
 minikube        k8s     user    https://minikube.sigs.k8s.io             mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/minikube "https://storage.googleapis.com/minikube/releases/latest/minikube-$OS-$ARCH" && chmod +x ~/.local/bin/minikube
 minikube        k8s     system  https://minikube.sigs.k8s.io             curl -fsSLo /tmp/minikube "https://storage.googleapis.com/minikube/releases/latest/minikube-$OS-$ARCH" && sudo install -m 755 /tmp/minikube /usr/local/bin/minikube
-k9s             k8s     user    https://k9scli.io                        mkdir -p ~/.local/bin && curl -fsSL "https://github.com/derailed/k9s/releases/latest/download/k9s_$(uname -s)_$ARCH.tar.gz" | tar -xz -C ~/.local/bin k9s
-k9s             k8s     system  https://k9scli.io                        curl -fsSL "https://github.com/derailed/k9s/releases/latest/download/k9s_$(uname -s)_$ARCH.tar.gz" | sudo tar -xz -C /usr/local/bin k9s
 helm            k8s     user    https://helm.sh                          mkdir -p ~/.local/bin && curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | HELM_INSTALL_DIR=$HOME/.local/bin bash -s -- --no-sudo
 helm            k8s     system  https://helm.sh                          curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 # ---- Networking & self-hosting ----
 tailscale       net     system  https://tailscale.com                    curl -fsSL https://tailscale.com/install.sh | sh
 # ---- Cloud & PaaS CLIs ----
-gcloud          cloud   user    https://cloud.google.com/sdk             curl https://sdk.cloud.google.com | bash
-flyctl          cloud   user    https://fly.io                           curl -L https://fly.io/install.sh | sh
 aws             cloud   user    https://aws.amazon.com/cli/              curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
+oci             cloud   user    https://docs.oracle.com/en-us/iaas/tools/oci-cli/latest/ bash -c "$(curl -fsSL https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)" -- --accept-all-defaults
 aws             cloud   system  https://aws.amazon.com/cli/              curl -fsSL https://awscli.amazonaws.com/v2/install.sh | sudo bash -s -- --system
 az              cloud   user    https://learn.microsoft.com/cli/azure/   curl -L https://aka.ms/InstallAzureCli | bash
 az              cloud   system  https://learn.microsoft.com/cli/azure/   curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 terraform       cloud   user    https://www.terraform.io                 v=$(curl -fsSL https://checkpoint-api.hashicorp.com/v1/check/terraform | sed -E 's/.*"current_version":"([^"]+)".*/\1/') && curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${v}/terraform_${v}_${OS}_${ARCH}.zip" && mkdir -p ~/.local/bin && unzip -o /tmp/terraform.zip terraform -d ~/.local/bin
 terraform       cloud   system  https://www.terraform.io                 v=$(curl -fsSL https://checkpoint-api.hashicorp.com/v1/check/terraform | sed -E 's/.*"current_version":"([^"]+)".*/\1/') && curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${v}/terraform_${v}_${OS}_${ARCH}.zip" && sudo unzip -o /tmp/terraform.zip terraform -d /usr/local/bin
-# ---- Security scanners & linters ----
-trivy           sec     user    https://trivy.dev                        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b ~/.local/bin
-trivy           sec     system  https://trivy.dev                        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
-# ---- Databases & backend ----
-duckdb          data    user    https://duckdb.org                       curl https://install.duckdb.org | sh
 
 # ---- Browsers ----
 brave           browsers system  https://brave.com/linux/                 curl -fsS https://dl.brave.com/install.sh | sh
