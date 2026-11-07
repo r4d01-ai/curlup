@@ -16,6 +16,8 @@ A plain-text list of 117 developer tools, each with its official installer: the 
 ./curlup.sh -y ...                 # no prompts; tools with both modes default to user
 ```
 
+The fzf picker uses a neon retro theme. Set `NO_COLOR=1` to turn the colours off.
+
 Before each install you're asked `[y/N/v]`. `v` opens the remote script in your pager so you can read it first.
 
 ## User or system install

@@ -137,12 +137,19 @@ if [[ -n $NAMES ]]; then
     chosen+=("$i${m:+:$m}")
   done
 elif command -v fzf >/dev/null 2>&1; then
+  # retro neon look: Blade Runner amber and teal over synthwave magenta and violet.
+  # NO_COLOR (https://no-color.org) drops the colours and keeps the layout.
+  style=(--border=rounded --border-label=' CURLUP // TOOL SELECT ' --border-label-pos=center
+         --prompt='◢ ' --pointer='▶' --marker='◆' --info=inline-right)
+  if [[ -z ${NO_COLOR:-} ]]; then
+    style+=(--color='bg:#0b0c1a,bg+:#2a1248,fg:#c9c3d9,fg+:#ffffff,hl:#ff2a6d,hl+:#ff6ac1,info:#7b2ff7,prompt:#ffb000,pointer:#05d9e8,marker:#ffd319,spinner:#05d9e8,header:#ff9f1c,border:#05d9e8,label:#ffb000')
+  fi
   while read -r i _; do [[ -n $i ]] && chosen+=("$i"); done < <(
     for i in "${visible[@]}"; do
       printf '%s\t%s\tuser:   %s\\nsystem: %s\n' "$i" "$(row "$i")" "${ucmd[$i]:-(none)}" "${scmd[$i]:-(none)}"
     done |
-      fzf --multi --delimiter='\t' --with-nth=2 --height=80% --reverse \
-          --header='TAB = select several, ENTER = install, ✓ = already installed' \
+      fzf --multi --delimiter='\t' --with-nth=2 --height=80% --reverse "${style[@]}" \
+          --header='TAB = select several · ENTER = install · ✓ = already installed' \
           --preview='printf "%b\n" {3}' --preview-window=down,4,wrap \
       | cut -f1
   )
