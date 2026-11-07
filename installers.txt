@@ -16,9 +16,10 @@ opencode        ai      user    https://opencode.ai                      curl -f
 copilot         ai      user    https://github.com/features/copilot      curl -fsSL https://gh.io/copilot-install | bash
 copilot         ai      system  https://github.com/features/copilot      curl -fsSL https://gh.io/copilot-install | sudo bash
 aider           ai      user    https://aider.chat                       curl -LsSf https://aider.chat/install.sh | sh
+vibe            ai      user    https://docs.mistral.ai/vibe/code/cli/   curl -LsSf https://mistral.ai/vibe/install.sh | bash
 # ---- Languages, runtimes, version managers ----
 uv              lang    user    https://docs.astral.sh/uv/               curl -LsSf https://astral.sh/uv/install.sh | sh
-rustup          lang    user    https://rustup.rs                        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rust            lang    user    https://rustup.rs                        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 bun             lang    user    https://bun.sh                           curl -fsSL https://bun.sh/install | bash
 deno            lang    user    https://deno.com                         curl -fsSL https://deno.land/install.sh | sh
 fnm             lang    user    https://github.com/Schniz/fnm            curl -fsSL https://fnm.vercel.app/install | bash
@@ -36,6 +37,7 @@ chezmoi         shell   system  https://www.chezmoi.io                   sudo sh
 direnv          shell   user    https://direnv.net                       curl -sfL https://direnv.net/install.sh | bash
 # ---- Editors & terminals ----
 zed             editor  user    https://zed.dev                          curl -f https://zed.dev/install.sh | sh
+vscode          editor  user    https://code.visualstudio.com            mkdir -p ~/.local/share ~/.local/bin && curl -fsSL "https://code.visualstudio.com/sha/download?build=stable&os=linux-x64" | tar -xz -C ~/.local/share && ln -sfn ~/.local/share/VSCode-linux-x64/bin/code ~/.local/bin/code
 just            cli     user    https://just.systems                     curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin
 just            cli     system  https://just.systems                     curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
 task            cli     user    https://taskfile.dev                     sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
@@ -75,3 +77,6 @@ trivy           sec     user    https://trivy.dev                        curl -s
 trivy           sec     system  https://trivy.dev                        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 # ---- Databases & backend ----
 duckdb          data    user    https://duckdb.org                       curl https://install.duckdb.org | sh
+
+# ---- Browsers ----
+brave           browsers system  https://brave.com/linux/                 curl -fsS https://dl.brave.com/install.sh | sh
