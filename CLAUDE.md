@@ -19,6 +19,7 @@ and choose tools to install, deciding per tool between a **user** install (home 
   - Fields are whitespace-separated, and everything after the homepage is the command.
   - The homepage is the tool's official site; the picker shows it as a link in the preview.
   - Commands may use `$OS` (linux|darwin) and `$ARCH` (amd64|arm64), which `curlup.sh` exports.
+  - `@also <tool> <text>` lists other install routes (apt, brew, npm) for the preview only; the picker does not install from them.
   - `name` should match the installed binary, so the ✓ "already installed" marker works. When the binary name differs, add `@bin <tool> <binary...>` (see the top of `installers.txt`).
 - `curlup.sh`: the picker. Tools are listed by category then name; typing searches by name. It has fzf multi-select, falls back to a numbered menu, and supports `-n name[:mode]`, `-m user|system`, `-l`, `-d` (dry run), `-y`, `-f FILE|URL` and a category argument.
 - `README.md`: user docs.

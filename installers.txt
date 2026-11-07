@@ -15,6 +15,23 @@
 @bin  vscode        code
 @bin  brave         brave-browser
 
+# Other ways to get a tool, shown in the picker's preview (from memory, not checked):
+#   @also  <tool>  <text>
+@also  go           apt: golang-go (Debian); brew: go
+@also  rust         apt: rustc (Debian); brew: rust
+@also  aws          brew: awscli; pip: awscli
+@also  az           brew: azure-cli; apt: vendor repo (Microsoft)
+@also  kubectl      brew: kubectl
+@also  helm         brew: helm
+@also  minikube     brew: minikube
+@also  terraform    brew: hashicorp/tap/terraform; apt: vendor repo (HashiCorp)
+@also  tailscale    apt: vendor repo (Tailscale); brew: tailscale
+@also  brave        apt: vendor repo (Brave); brew: cask brave-browser
+@also  vscode       apt: vendor repo (Microsoft); brew: cask visual-studio-code
+@also  oci          brew: oci-cli; pip: oci-cli
+@also  claude       npm: @anthropic-ai/claude-code
+@also  codex        npm: @openai/codex
+
 # ---- AI coding agents ----
 claude          ai      user    https://www.anthropic.com/claude-code    curl -fsSL https://claude.ai/install.sh | bash
 codex           ai      user    https://github.com/openai/codex          curl -fsSL https://chatgpt.com/codex/install.sh | sh

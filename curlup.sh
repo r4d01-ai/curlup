@@ -85,11 +85,13 @@ fi
 
 # --- parse: one tool per name, each with an optional user and system command ---
 names=() cats=() homes=() ucmd=() scmd=()
-declare -A idx_of=() bins_of=()
+declare -A idx_of=() bins_of=() also_of=()
 while read -r name cat mode home cmd; do
   [[ -z $name || $name == \#* ]] && continue
   # "@bin <tool> <binary...>": extra binary names for the ✓ marker, when they differ from the tool name
   if [[ $name == @bin ]]; then bins_of[$cat]="$mode $home $cmd"; continue; fi
+  # "@also <tool> <text>": other ways to get the tool (apt, brew, npm...), shown in the preview
+  if [[ $name == @also ]]; then also_of[$cat]="$mode $home $cmd"; continue; fi
   if [[ $mode != user && $mode != system ]] || [[ ! $home =~ ^https?:// ]] || [[ -z $cmd ]]; then
     echo "Skipping malformed line for '$name' (format: name category user|system homepage-URL command)" >&2; continue
   fi
@@ -189,7 +191,7 @@ pick_fzf() {  # prints the chosen tool indices, one per line
   for i in "${visible[@]}"; do
     # the preview is %b-escaped by fzf, so \e is ESC and \\ a backslash; the link is OSC 8 (clickable in most terminals)
     link="\\e]8;;${homes[$i]}\\e\\\\${homes[$i]}\\e]8;;\\e\\\\"
-    pv="homepage: $link\\nuser:   ${ucmd[$i]:-(none)}\\nsystem: ${scmd[$i]:-(none)}"
+    pv="homepage: $link\\nuser:   ${ucmd[$i]:-(none)}\\nsystem: ${scmd[$i]:-(none)}\\nalso:    ${also_of[${names[$i]}]:-(none)}"
     printf '%s\t%s\t%s\t%s\t%s\n' "$i" "$(row "$i")" "$pv" "${names[$i]}" "${cats[$i]}"
   done > "$dir/rows.tsv"
   # typing re-runs this: no query shows category then name, a query shows only matching names, sorted by name
@@ -206,7 +208,7 @@ FILTER
     fzf --multi --disabled --no-sort --delimiter="$tab" --with-nth=2 --height=80% --reverse "${style[@]}" \
         --bind "change:reload(sh $(printf %q "$dir/filter.sh") $(printf %q "$dir") {q})" \
         --header='TAB = select several · ENTER = install · type to search by name · ✓ = installed' \
-        --preview='printf "%b\n" {3}' --preview-window=down,4,wrap \
+        --preview='printf "%b\n" {3}' --preview-window=down,9,wrap \
     | cut -f1
 }
 
