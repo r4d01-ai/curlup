@@ -85,9 +85,11 @@ fi
 
 # --- parse: one tool per name, each with an optional user and system command ---
 names=() cats=() homes=() ucmd=() scmd=()
-declare -A idx_of=()
+declare -A idx_of=() bins_of=()
 while read -r name cat mode home cmd; do
   [[ -z $name || $name == \#* ]] && continue
+  # "@bin <tool> <binary...>": extra binary names for the ✓ marker, when they differ from the tool name
+  if [[ $name == @bin ]]; then bins_of[$cat]="$mode $home $cmd"; continue; fi
   if [[ $mode != user && $mode != system ]] || [[ ! $home =~ ^https?:// ]] || [[ -z $cmd ]]; then
     echo "Skipping malformed line for '$name' (format: name category user|system homepage-URL command)" >&2; continue
   fi
@@ -117,8 +119,12 @@ done
 # default order: by category, then by name
 mapfile -t visible < <(for i in "${visible[@]}"; do printf '%s\t%s\t%s\n' "${cats[$i]}" "${names[$i]}" "$i"; done | LC_ALL=C sort | cut -f3)
 
-mark() { command -v "$1" >/dev/null 2>&1 && printf '✓' || printf ' '; }
-row()  { printf '%s %-16s %-6s %-11s\n' "$(mark "${names[$1]}")" "${names[$1]}" "${cats[$1]}" "$(modes "$1")"; }
+mark() {  # ✓ if the tool's name or any of its known binary names is on PATH
+  local b
+  for b in "$@"; do command -v "$b" >/dev/null 2>&1 && { printf '✓'; return; }; done
+  printf ' '
+}
+row()  { printf '%s %-16s %-6s %-11s\n' "$(mark "${names[$1]}" ${bins_of[${names[$1]}]:-})" "${names[$1]}" "${cats[$1]}" "$(modes "$1")"; }
 # read from the terminal even when the script itself arrives on stdin (curl | bash)
 ask() { if { : </dev/tty; } 2>/dev/null; then read -r "$1" </dev/tty; else read -r "$1"; fi; }
 

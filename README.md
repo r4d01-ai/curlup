@@ -66,7 +66,7 @@ Add one line per install mode to `installers.txt`:
 - To offer both modes, add two lines with the same name.
 - Columns are separated by whitespace. The homepage must be an `https://` (or `http://`) URL, and everything after it is the command.
 - Commands can use `$OS` (`linux`/`darwin`) and `$ARCH` (`amd64`/`arm64`), which `curlup.sh` sets before running them.
-- Use the binary's name as `<name>` so the ✓ marker works.
+- Use the binary's name as `<name>` so the ✓ marker works. If the binary is named differently, add an `@bin` line, e.g. `@bin  vscode  code`, so the marker still works.
 
 ## Notes
 

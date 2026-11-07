@@ -9,6 +9,13 @@
 # Only official installers or official release downloads from each project: no third-party install services.
 # Commands may use $OS (linux|darwin) and $ARCH (amd64|arm64); curlup.sh sets them before running.
 
+# Binary names for the ✓ "already installed" marker, when they differ from the tool name:
+#   @bin  <tool>  <binary...>
+@bin  rust          rustc cargo
+@bin  vscode        code
+@bin  brave         brave-browser
+@bin  flyctl        fly
+
 # ---- AI coding agents ----
 claude          ai      user    https://www.anthropic.com/claude-code    curl -fsSL https://claude.ai/install.sh | bash
 codex           ai      user    https://github.com/openai/codex          curl -fsSL https://chatgpt.com/codex/install.sh | sh
