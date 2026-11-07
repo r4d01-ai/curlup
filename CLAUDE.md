@@ -14,14 +14,17 @@ and choose tools to install, deciding per tool between a **user** install (home 
 
 ## Files
 
-- `installers.txt`: the tool list, one install method per line: `<name> <category> <user|system> <command...>`
+- `installers.txt`: the tool list, one install method per line: `<name> <category> <user|system> <homepage-URL> <command...>`
   - A tool with both modes has two lines with the same name.
-  - Fields are whitespace-separated, and everything after the mode is the command.
+  - Fields are whitespace-separated, and everything after the homepage is the command.
+  - The homepage is the tool's official site; the picker shows it as a link in the preview.
   - Commands may use `$OS` (linux|darwin) and `$ARCH` (amd64|arm64), which `curlup.sh` exports.
   - `name` should match the installed binary, so the ✓ "already installed" marker works.
-- `curlup.sh`: the picker. It has fzf multi-select, falls back to a numbered menu, and supports `-n name[:mode]`, `-m user|system`, `-l`, `-d` (dry run), `-y`, `-f FILE|URL` and a category argument.
+- `curlup.sh`: the picker. Tools are listed by category then name; typing searches by name. It has fzf multi-select, falls back to a numbered menu, and supports `-n name[:mode]`, `-m user|system`, `-l`, `-d` (dry run), `-y`, `-f FILE|URL` and a category argument.
 - `README.md`: user docs.
 - `.github/workflows/check.yml`: CI that runs shellcheck, checks that the list parses, and does a dry run through `cat curlup.sh | bash`.
+
+The list is kept short on purpose (38 tools). Removed tools are in git history up to commit 8a147fb and can be restored if needed.
 
 ## Decisions already made (keep them)
 
@@ -34,9 +37,9 @@ and choose tools to install, deciding per tool between a **user** install (home 
 ## Open items
 
 - **Repo chosen: `r4d01-ai/curlup`.** `REPO` in `curlup.sh` and the README examples point there. Keep them in sync if the repo moves.
-- **Commands never run end to end.** Their downloads were blocked in the original environment: go, kubectl, minikube, skaffold, aws, az, oci, terraform (its version lookup uses HashiCorp's checkpoint API `current_version` field, the least certain), flux, k3d, and most non-GitHub-hosted scripts. Smoke-test these in a disposable container in both modes.
-- **Already installed for real in user mode, and working:** kind, k9s, argocd, eksctl, hcloud, krew, yt-dlp.
-- **System-only tools** (no official home-folder install): brew, nix, crystal, rclone, heroku, doppler, dolt, talosctl, devbox, k3s, k0s, rke2, ollama, netdata, pihole, coolify, dokploy, zerotier-cli, ibmcloud, scw. Tailscale is in the same group: system-only, since it installs a system daemon.
+- **Homepage URLs were written from memory and not checked in the sandbox** (most hosts were unreachable). Check them before relying on them.
+- **Commands never run end to end.** Downloads were blocked in the original environment. Smoke-test in a disposable container in both modes: go, kubectl, minikube, terraform (its version lookup uses HashiCorp's checkpoint API `current_version` field, the least certain), and most non-GitHub-hosted scripts.
+- **Already installed for real in user mode, and working:** kind, k9s, yt-dlp.
 
 ## How to test
 
@@ -59,6 +62,6 @@ curl -fsSL http://127.0.0.1:8765/curlup.sh | INSTALLERS_URL=http://127.0.0.1:876
 - Bash, `set -uo pipefail`, shellcheck-clean at warning level.
 - When adding a tool:
   - Verify the command against the project's official docs.
-  - Add `user` and/or `system` lines.
+  - Add `user` and/or `system` lines, each with the tool's official homepage.
   - Keep the columns aligned (name 15 wide, category 7, mode 7).
   - Put the tool in the matching `# ---- section ----`.

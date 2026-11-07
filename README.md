@@ -1,12 +1,12 @@
 # curlup
 
-A plain-text list of 117 developer tools, each with its official installer: the project's own `curl | sh` script or an official release download. Comes with a picker that lets you choose tools and decide, for each one, whether it installs into your home folder or system-wide.
+A plain-text list of 38 of the most useful developer tools, each with its official installer (the project's own `curl | sh` script or an official release download) and its homepage. A picker lets you choose tools and decide, for each one, whether it installs into your home folder or system-wide.
 
 ## Usage
 
 ```bash
 ./curlup.sh                        # fuzzy picker (fzf), numbered menu if fzf is missing
-./curlup.sh k8s                    # one category: ai lang shell editor cli infra k8s net cloud sec data mobile
+./curlup.sh k8s                    # one category: ai lang shell editor cli infra k8s net cloud sec data
 ./curlup.sh -m user                # home-folder installs only (hides the tools that can only install system-wide)
 ./curlup.sh -m system              # system-wide installs only
 ./curlup.sh -n go,kubectl,aws      # install by name, no menu
@@ -15,6 +15,8 @@ A plain-text list of 117 developer tools, each with its official installer: the 
 ./curlup.sh -d ...                 # dry run: show the commands only
 ./curlup.sh -y ...                 # no prompts; tools with both modes default to user
 ```
+
+The picker lists tools by category, then name. Type to search: matches are sorted by name. The preview shows each tool's homepage as a link (clickable in terminals that support it).
 
 The picker needs fzf 0.38 or newer. If fzf is missing or too old, it offers to install it, and if you don't answer within 5 seconds it uses the plain numbered menu instead.
 
@@ -29,8 +31,8 @@ Before each install you're asked `[y/N/v]`. `v` opens the remote script in your 
 | `user` | your home folder, usually `~/.local/bin` | no |
 | `system` | system-wide, e.g. `/usr/local/bin`, system packages and services | yes |
 
-- 33 tools have both modes. When you pick one, the picker asks which you want, unless `-m` or `name:mode` already decided it.
-- 63 tools are user-only and 21 are system-only. System-only tools are things like docker's daemon, k3s or tailscale, which install system services by design.
+- Some tools have both modes. When you pick one, the picker asks which you want, unless `-m` or `name:mode` already decided it.
+- Tools that install system services by design, like tailscale, are system-only.
 
 ## Run it with curl
 
@@ -58,11 +60,11 @@ To use a fork or branch without editing the script, set `CURL_INSTALLERS_REPO=us
 Add one line per install mode to `installers.txt`:
 
 ```
-<name>  <category>  <user|system>  <command...>
+<name>  <category>  <user|system>  <homepage-URL>  <command...>
 ```
 
 - To offer both modes, add two lines with the same name.
-- Columns are separated by whitespace, and everything after the mode is the command.
+- Columns are separated by whitespace. The homepage must be an `https://` (or `http://`) URL, and everything after it is the command.
 - Commands can use `$OS` (`linux`/`darwin`) and `$ARCH` (`amd64`/`arm64`), which `curlup.sh` sets before running them.
 - Use the binary's name as `<name>` so the ✓ marker works.
 

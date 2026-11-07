@@ -1,182 +1,77 @@
-# curl-installers: one install method per line
-# Format:  <name>  <category>  <mode>  <command...>
+# curlup: one install method per line
+# Format:  <name>  <category>  <mode>  <homepage>  <command...>
 #   - mode is "user" (installs into your home dir, no sudo) or "system" (system-wide, needs root)
-#   - a tool can have two lines, one per mode; curlup.sh asks which one you want
-#   - name, category and mode must not contain spaces; everything after them is the command
+#   - homepage is the tool's official site, shown in the picker's preview
+#   - a tool can have two lines, one per mode; the picker asks which one you want
+#   - name, category, mode and homepage must not contain spaces; everything after the homepage is the command
 #   - name should match the binary it installs, so the picker can mark it as installed
 #   - lines starting with # are ignored
 # Only official installers or official release downloads from each project: no third-party install services.
 # Commands may use $OS (linux|darwin) and $ARCH (amd64|arm64); curlup.sh sets them before running.
 
 # ---- AI coding agents ----
-claude          ai      user    curl -fsSL https://claude.ai/install.sh | bash
-codex           ai      user    curl -fsSL https://chatgpt.com/codex/install.sh | sh
-opencode        ai      user    curl -fsSL https://opencode.ai/install | bash
-cursor-agent    ai      user    curl https://cursor.com/install -fsS | bash
-copilot         ai      user    curl -fsSL https://gh.io/copilot-install | bash
-copilot         ai      system  curl -fsSL https://gh.io/copilot-install | sudo bash
-amp             ai      user    curl -fsSL https://ampcode.com/install.sh | bash
-droid           ai      user    curl -fsSL https://app.factory.ai/cli | sh
-kiro-cli        ai      user    curl -fsSL https://cli.kiro.dev/install | bash
-goose           ai      user    curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | bash
-aider           ai      user    curl -LsSf https://aider.chat/install.sh | sh
-ollama          ai      system  curl -fsSL https://ollama.com/install.sh | sh
-
+claude          ai      user    https://www.anthropic.com/claude-code    curl -fsSL https://claude.ai/install.sh | bash
+codex           ai      user    https://github.com/openai/codex          curl -fsSL https://chatgpt.com/codex/install.sh | sh
+opencode        ai      user    https://opencode.ai                      curl -fsSL https://opencode.ai/install | bash
+copilot         ai      user    https://github.com/features/copilot      curl -fsSL https://gh.io/copilot-install | bash
+copilot         ai      system  https://github.com/features/copilot      curl -fsSL https://gh.io/copilot-install | sudo bash
+aider           ai      user    https://aider.chat                       curl -LsSf https://aider.chat/install.sh | sh
 # ---- Languages, runtimes, version managers ----
-uv              lang    user    curl -LsSf https://astral.sh/uv/install.sh | sh
-rustup          lang    user    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-bun             lang    user    curl -fsSL https://bun.sh/install | bash
-deno            lang    user    curl -fsSL https://deno.land/install.sh | sh
-fnm             lang    user    curl -fsSL https://fnm.vercel.app/install | bash
-nvm             lang    user    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-volta           lang    user    curl https://get.volta.sh | bash
-pnpm            lang    user    curl -fsSL https://get.pnpm.io/install.sh | sh -
-mise            lang    user    curl https://mise.run | sh
-sdk             lang    user    curl -s "https://get.sdkman.io" | bash
-ghcup           lang    user    curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
-juliaup         lang    user    curl -fsSL https://install.julialang.org | sh
-pixi            lang    user    curl -fsSL https://pixi.sh/install.sh | sh
-poetry          lang    user    curl -sSL https://install.python-poetry.org | python3 -
-pyenv           lang    user    curl -fsSL https://pyenv.run | bash
-dotnet          lang    user    curl -sSL https://dot.net/v1/dotnet-install.sh | bash
-cargo-binstall  lang    user    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-nix             lang    system  curl -fsSL https://install.determinate.systems/nix | sh -s -- install
-forge           lang    user    curl -L https://foundry.paradigm.xyz | bash
-wasmtime        lang    user    curl https://wasmtime.dev/install.sh -sSf | bash
-wasmer          lang    user    curl https://get.wasmer.io -sSfL | sh
-wasmedge        lang    user    curl -sSf https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh | bash
-elan            lang    user    curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh
-choosenim       lang    user    curl https://nim-lang.org/choosenim/init.sh -sSf | sh
-crystal         lang    system  curl -fsSL https://crystal-lang.org/install.sh | sudo bash
-opam            lang    user    bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
-solana          lang    user    sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
-proto           lang    user    bash <(curl -fsSL https://moonrepo.dev/install/proto.sh)
-pkgx            lang    user    mkdir -p ~/.local/bin && curl -fsS "https://pkgx.sh/$(uname)/$(uname -m).tgz" | tar xz -C ~/.local/bin
-pkgx            lang    system  curl -fsS https://pkgx.sh | sh
-go              lang    user    v=$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1) && rm -rf ~/.local/go && mkdir -p ~/.local && curl -fsSL "https://go.dev/dl/$v.$OS-$ARCH.tar.gz" | tar -C ~/.local -xz && echo 'Add ~/.local/go/bin (and ~/go/bin) to your PATH'
-go              lang    system  v=$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1) && sudo rm -rf /usr/local/go && curl -fsSL "https://go.dev/dl/$v.$OS-$ARCH.tar.gz" | sudo tar -C /usr/local -xz && echo 'Add /usr/local/go/bin (and ~/go/bin) to your PATH'
-
+uv              lang    user    https://docs.astral.sh/uv/               curl -LsSf https://astral.sh/uv/install.sh | sh
+rustup          lang    user    https://rustup.rs                        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+bun             lang    user    https://bun.sh                           curl -fsSL https://bun.sh/install | bash
+deno            lang    user    https://deno.com                         curl -fsSL https://deno.land/install.sh | sh
+fnm             lang    user    https://github.com/Schniz/fnm            curl -fsSL https://fnm.vercel.app/install | bash
+mise            lang    user    https://mise.jdx.dev                     curl https://mise.run | sh
+go              lang    user    https://go.dev                           v=$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1) && rm -rf ~/.local/go && mkdir -p ~/.local && curl -fsSL "https://go.dev/dl/$v.$OS-$ARCH.tar.gz" | tar -C ~/.local -xz && echo 'Add ~/.local/go/bin (and ~/go/bin) to your PATH'
+go              lang    system  https://go.dev                           v=$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1) && sudo rm -rf /usr/local/go && curl -fsSL "https://go.dev/dl/$v.$OS-$ARCH.tar.gz" | sudo tar -C /usr/local -xz && echo 'Add /usr/local/go/bin (and ~/go/bin) to your PATH'
 # ---- Shell, prompt, dotfiles ----
-brew            shell   system  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-oh-my-zsh       shell   user    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-oh-my-bash      shell   user    bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
-oh-my-posh      shell   user    curl -s https://ohmyposh.dev/install.sh | bash -s
-starship        shell   user    curl -sS https://starship.rs/install.sh | sh
-zoxide          shell   user    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-zoxide          shell   system  curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh -s -- --bin-dir /usr/local/bin
-atuin           shell   user    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
-chezmoi         shell   user    sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin
-chezmoi         shell   system  sudo sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
-direnv          shell   user    curl -sfL https://direnv.net/install.sh | bash
-getnf           shell   user    curl -fsSL https://raw.githubusercontent.com/getnf/getnf/main/install.sh | bash
-zinit           shell   user    bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
-mcfly           shell   user    curl -LSfs https://raw.githubusercontent.com/cantino/mcfly/master/ci/install.sh | sh -s -- --git cantino/mcfly
-
+brew            shell   system  https://brew.sh                          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+starship        shell   user    https://starship.rs                      curl -sS https://starship.rs/install.sh | sh
+zoxide          shell   user    https://github.com/ajeetdsouza/zoxide    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+zoxide          shell   system  https://github.com/ajeetdsouza/zoxide    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh -s -- --bin-dir /usr/local/bin
+atuin           shell   user    https://atuin.sh                         curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+chezmoi         shell   user    https://www.chezmoi.io                   sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin
+chezmoi         shell   system  https://www.chezmoi.io                   sudo sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+direnv          shell   user    https://direnv.net                       curl -sfL https://direnv.net/install.sh | bash
 # ---- Editors & terminals ----
-zed             editor  user    curl -f https://zed.dev/install.sh | sh
-micro           editor  user    mkdir -p ~/.local/bin && cd ~/.local/bin && curl https://getmic.ro | bash
-micro           editor  system  cd /tmp && curl https://getmic.ro | bash && sudo mv micro /usr/local/bin/
-kitty           editor  user    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-code-server     editor  user    curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone
-code-server     editor  system  curl -fsSL https://code-server.dev/install.sh | sh
-
-just            cli     user    curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin
-just            cli     system  curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
-task            cli     user    sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-task            cli     system  sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-yt-dlp          cli     user    mkdir -p ~/.local/bin && curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && chmod a+rx ~/.local/bin/yt-dlp
-yt-dlp          cli     system  sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && sudo chmod a+rx /usr/local/bin/yt-dlp
-rclone          cli     system  curl https://rclone.org/install.sh | sudo bash
-ruff            cli     user    curl -LsSf https://astral.sh/ruff/install.sh | sh
-
+zed             editor  user    https://zed.dev                          curl -f https://zed.dev/install.sh | sh
+just            cli     user    https://just.systems                     curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin
+just            cli     system  https://just.systems                     curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
+task            cli     user    https://taskfile.dev                     sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+task            cli     system  https://taskfile.dev                     sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+yt-dlp          cli     user    https://github.com/yt-dlp/yt-dlp         mkdir -p ~/.local/bin && curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && chmod a+rx ~/.local/bin/yt-dlp
+yt-dlp          cli     system  https://github.com/yt-dlp/yt-dlp         sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && sudo chmod a+rx /usr/local/bin/yt-dlp
+ruff            cli     user    https://docs.astral.sh/ruff/             curl -LsSf https://astral.sh/ruff/install.sh | sh
 # ---- Containers & infra ----
-docker          infra   user    curl -fsSL https://get.docker.com/rootless | sh
-docker          infra   system  curl -fsSL https://get.docker.com | sh
-lazydocker      infra   user    curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
-lazydocker      infra   system  curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | sudo DIR=/usr/local/bin bash
-devbox          infra   system  curl -fsSL https://get.jetify.com/devbox | bash
-dagger          infra   user    curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
-dagger          infra   system  curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR=/usr/local/bin sudo -E sh
-pulumi          infra   user    curl -fsSL https://get.pulumi.com | sh
-
+docker          infra   user    https://www.docker.com                   curl -fsSL https://get.docker.com/rootless | sh
+docker          infra   system  https://www.docker.com                   curl -fsSL https://get.docker.com | sh
+lazydocker      infra   user    https://github.com/jesseduffield/lazydocker curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+lazydocker      infra   system  https://github.com/jesseduffield/lazydocker curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | sudo DIR=/usr/local/bin bash
 # ---- Kubernetes ----
-kubectl         k8s     user    mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/kubectl "https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/release/stable.txt)/bin/$OS/$ARCH/kubectl" && chmod +x ~/.local/bin/kubectl
-kubectl         k8s     system  curl -fsSLo /tmp/kubectl "https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/release/stable.txt)/bin/$OS/$ARCH/kubectl" && sudo install -m 755 /tmp/kubectl /usr/local/bin/kubectl
-kind            k8s     user    mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/kind "https://github.com/kubernetes-sigs/kind/releases/latest/download/kind-$OS-$ARCH" && chmod +x ~/.local/bin/kind
-kind            k8s     system  curl -fsSLo /tmp/kind "https://github.com/kubernetes-sigs/kind/releases/latest/download/kind-$OS-$ARCH" && sudo install -m 755 /tmp/kind /usr/local/bin/kind
-minikube        k8s     user    mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/minikube "https://storage.googleapis.com/minikube/releases/latest/minikube-$OS-$ARCH" && chmod +x ~/.local/bin/minikube
-minikube        k8s     system  curl -fsSLo /tmp/minikube "https://storage.googleapis.com/minikube/releases/latest/minikube-$OS-$ARCH" && sudo install -m 755 /tmp/minikube /usr/local/bin/minikube
-k3d             k8s     user    mkdir -p ~/.local/bin && curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | K3D_INSTALL_DIR=$HOME/.local/bin USE_SUDO=false bash
-k3d             k8s     system  curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-k9s             k8s     user    mkdir -p ~/.local/bin && curl -fsSL "https://github.com/derailed/k9s/releases/latest/download/k9s_$(uname -s)_$ARCH.tar.gz" | tar -xz -C ~/.local/bin k9s
-k9s             k8s     system  curl -fsSL "https://github.com/derailed/k9s/releases/latest/download/k9s_$(uname -s)_$ARCH.tar.gz" | sudo tar -xz -C /usr/local/bin k9s
-krew            k8s     user    cd "$(mktemp -d)" && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew-${OS}_${ARCH}.tar.gz" && tar zxf "krew-${OS}_${ARCH}.tar.gz" && ./"krew-${OS}_${ARCH}" install krew && echo 'Add ~/.krew/bin to your PATH, then e.g.: kubectl krew install ctx ns'
-argocd          k8s     user    mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/argocd "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-$OS-$ARCH" && chmod +x ~/.local/bin/argocd
-argocd          k8s     system  curl -fsSLo /tmp/argocd "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-$OS-$ARCH" && sudo install -m 755 /tmp/argocd /usr/local/bin/argocd
-flux            k8s     user    mkdir -p ~/.local/bin && curl -s https://fluxcd.io/install.sh | bash -s ~/.local/bin
-flux            k8s     system  curl -s https://fluxcd.io/install.sh | sudo bash
-skaffold        k8s     user    mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/skaffold "https://storage.googleapis.com/skaffold/releases/latest/skaffold-$OS-$ARCH" && chmod +x ~/.local/bin/skaffold
-skaffold        k8s     system  curl -fsSLo /tmp/skaffold "https://storage.googleapis.com/skaffold/releases/latest/skaffold-$OS-$ARCH" && sudo install -m 755 /tmp/skaffold /usr/local/bin/skaffold
-k3s             k8s     system  curl -sfL https://get.k3s.io | sh -
-helm            k8s     user    mkdir -p ~/.local/bin && curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | HELM_INSTALL_DIR=$HOME/.local/bin bash -s -- --no-sudo
-helm            k8s     system  curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-kustomize       k8s     user    mkdir -p ~/.local/bin && cd ~/.local/bin && curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
-kustomize       k8s     system  cd /tmp && curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash && sudo mv kustomize /usr/local/bin/
-talosctl        k8s     system  curl -sL https://talos.dev/install | sh
-k0s             k8s     system  curl -sSLf https://get.k0s.sh | sudo sh
-rke2            k8s     system  curl -sfL https://get.rke2.io | sudo sh -
-linkerd         k8s     user    curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | sh
-
+kubectl         k8s     user    https://kubernetes.io/docs/reference/kubectl/ mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/kubectl "https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/release/stable.txt)/bin/$OS/$ARCH/kubectl" && chmod +x ~/.local/bin/kubectl
+kubectl         k8s     system  https://kubernetes.io/docs/reference/kubectl/ curl -fsSLo /tmp/kubectl "https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/release/stable.txt)/bin/$OS/$ARCH/kubectl" && sudo install -m 755 /tmp/kubectl /usr/local/bin/kubectl
+kind            k8s     user    https://kind.sigs.k8s.io                 mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/kind "https://github.com/kubernetes-sigs/kind/releases/latest/download/kind-$OS-$ARCH" && chmod +x ~/.local/bin/kind
+kind            k8s     system  https://kind.sigs.k8s.io                 curl -fsSLo /tmp/kind "https://github.com/kubernetes-sigs/kind/releases/latest/download/kind-$OS-$ARCH" && sudo install -m 755 /tmp/kind /usr/local/bin/kind
+minikube        k8s     user    https://minikube.sigs.k8s.io             mkdir -p ~/.local/bin && curl -fsSLo ~/.local/bin/minikube "https://storage.googleapis.com/minikube/releases/latest/minikube-$OS-$ARCH" && chmod +x ~/.local/bin/minikube
+minikube        k8s     system  https://minikube.sigs.k8s.io             curl -fsSLo /tmp/minikube "https://storage.googleapis.com/minikube/releases/latest/minikube-$OS-$ARCH" && sudo install -m 755 /tmp/minikube /usr/local/bin/minikube
+k9s             k8s     user    https://k9scli.io                        mkdir -p ~/.local/bin && curl -fsSL "https://github.com/derailed/k9s/releases/latest/download/k9s_$(uname -s)_$ARCH.tar.gz" | tar -xz -C ~/.local/bin k9s
+k9s             k8s     system  https://k9scli.io                        curl -fsSL "https://github.com/derailed/k9s/releases/latest/download/k9s_$(uname -s)_$ARCH.tar.gz" | sudo tar -xz -C /usr/local/bin k9s
+helm            k8s     user    https://helm.sh                          mkdir -p ~/.local/bin && curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | HELM_INSTALL_DIR=$HOME/.local/bin bash -s -- --no-sudo
+helm            k8s     system  https://helm.sh                          curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 # ---- Networking & self-hosting ----
-tailscale       net     system  curl -fsSL https://tailscale.com/install.sh | sh
-coolify         net     system  curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
-dokploy         net     system  curl -sSL https://dokploy.com/install.sh | sh
-zerotier-cli    net     system  curl -s https://install.zerotier.com | sudo bash
-pihole          net     system  curl -sSL https://install.pi-hole.net | bash
-netdata         net     system  curl https://get.netdata.cloud/kickstart.sh > /tmp/netdata-kickstart.sh && sh /tmp/netdata-kickstart.sh
-
+tailscale       net     system  https://tailscale.com                    curl -fsSL https://tailscale.com/install.sh | sh
 # ---- Cloud & PaaS CLIs ----
-gcloud          cloud   user    curl https://sdk.cloud.google.com | bash
-flyctl          cloud   user    curl -L https://fly.io/install.sh | sh
-heroku          cloud   system  curl https://cli-assets.heroku.com/install.sh | sh
-railway         cloud   user    bash <(curl -fsSL railway.com/install.sh) -y
-doppler         cloud   system  curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh | sudo sh
-sst             cloud   user    curl -fsSL https://sst.dev/install | bash
-encore          cloud   user    curl -L https://encore.dev/install.sh | bash
-aws             cloud   user    curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
-aws             cloud   system  curl -fsSL https://awscli.amazonaws.com/v2/install.sh | sudo bash -s -- --system
-oci             cloud   user    bash -c "$(curl -fsSL https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)" -- --accept-all-defaults
-az              cloud   user    curl -L https://aka.ms/InstallAzureCli | bash
-az              cloud   system  curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-ibmcloud        cloud   system  curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
-scw             cloud   system  curl -s https://raw.githubusercontent.com/scaleway/scaleway-cli/master/scripts/get.sh | sh
-eksctl          cloud   user    mkdir -p ~/.local/bin && curl -fsSL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_$ARCH.tar.gz" | tar -xz -C ~/.local/bin eksctl
-eksctl          cloud   system  curl -fsSL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_$ARCH.tar.gz" | sudo tar -xz -C /usr/local/bin eksctl
-hcloud          cloud   user    mkdir -p ~/.local/bin && curl -fsSL "https://github.com/hetznercloud/cli/releases/latest/download/hcloud-$OS-$ARCH.tar.gz" | tar -xz -C ~/.local/bin hcloud
-hcloud          cloud   system  curl -fsSL "https://github.com/hetznercloud/cli/releases/latest/download/hcloud-$OS-$ARCH.tar.gz" | sudo tar -xz -C /usr/local/bin hcloud
-terraform       cloud   user    v=$(curl -fsSL https://checkpoint-api.hashicorp.com/v1/check/terraform | sed -E 's/.*"current_version":"([^"]+)".*/\1/') && curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${v}/terraform_${v}_${OS}_${ARCH}.zip" && mkdir -p ~/.local/bin && unzip -o /tmp/terraform.zip terraform -d ~/.local/bin
-terraform       cloud   system  v=$(curl -fsSL https://checkpoint-api.hashicorp.com/v1/check/terraform | sed -E 's/.*"current_version":"([^"]+)".*/\1/') && curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${v}/terraform_${v}_${OS}_${ARCH}.zip" && sudo unzip -o /tmp/terraform.zip terraform -d /usr/local/bin
-
+gcloud          cloud   user    https://cloud.google.com/sdk             curl https://sdk.cloud.google.com | bash
+flyctl          cloud   user    https://fly.io                           curl -L https://fly.io/install.sh | sh
+aws             cloud   user    https://aws.amazon.com/cli/              curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
+aws             cloud   system  https://aws.amazon.com/cli/              curl -fsSL https://awscli.amazonaws.com/v2/install.sh | sudo bash -s -- --system
+az              cloud   user    https://learn.microsoft.com/cli/azure/   curl -L https://aka.ms/InstallAzureCli | bash
+az              cloud   system  https://learn.microsoft.com/cli/azure/   curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+terraform       cloud   user    https://www.terraform.io                 v=$(curl -fsSL https://checkpoint-api.hashicorp.com/v1/check/terraform | sed -E 's/.*"current_version":"([^"]+)".*/\1/') && curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${v}/terraform_${v}_${OS}_${ARCH}.zip" && mkdir -p ~/.local/bin && unzip -o /tmp/terraform.zip terraform -d ~/.local/bin
+terraform       cloud   system  https://www.terraform.io                 v=$(curl -fsSL https://checkpoint-api.hashicorp.com/v1/check/terraform | sed -E 's/.*"current_version":"([^"]+)".*/\1/') && curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${v}/terraform_${v}_${OS}_${ARCH}.zip" && sudo unzip -o /tmp/terraform.zip terraform -d /usr/local/bin
 # ---- Security scanners & linters ----
-trivy           sec     user    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b ~/.local/bin
-trivy           sec     system  curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
-grype           sec     user    curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b ~/.local/bin
-grype           sec     system  curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sudo sh -s -- -b /usr/local/bin
-syft            sec     user    curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b ~/.local/bin
-syft            sec     system  curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sudo sh -s -- -b /usr/local/bin
-golangci-lint   sec     user    curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b ~/.local/bin
-golangci-lint   sec     system  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sudo sh -s -- -b /usr/local/bin
-
+trivy           sec     user    https://trivy.dev                        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b ~/.local/bin
+trivy           sec     system  https://trivy.dev                        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 # ---- Databases & backend ----
-duckdb          data    user    curl https://install.duckdb.org | sh
-turso           data    user    curl -sSfL https://get.tur.so/install.sh | bash
-surreal         data    user    curl -sSf https://install.surrealdb.com | sh
-atlas           data    user    curl -sSf https://atlasgo.sh | sh
-temporal        data    user    curl -sSf https://temporal.download/cli.sh | sh
-dolt            data    system  sudo bash -c 'curl -L https://github.com/dolthub/dolt/releases/latest/download/install.sh | bash'
-meilisearch     data    user    mkdir -p ~/.local/bin && cd ~/.local/bin && curl -L https://install.meilisearch.com | sh
-meilisearch     data    system  cd /tmp && curl -L https://install.meilisearch.com | sh && sudo mv meilisearch /usr/local/bin/
-
-# ---- Mobile ----
-maestro         mobile  user    curl -fsSL "https://get.maestro.mobile.dev" | bash
-shorebird       mobile  user    curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash
+duckdb          data    user    https://duckdb.org                       curl https://install.duckdb.org | sh

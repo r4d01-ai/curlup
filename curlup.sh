@@ -84,16 +84,16 @@ fi
 [[ -r $FILE ]] || { echo "Cannot read $FILE" >&2; exit 1; }
 
 # --- parse: one tool per name, each with an optional user and system command ---
-names=() cats=() ucmd=() scmd=()
+names=() cats=() homes=() ucmd=() scmd=()
 declare -A idx_of=()
-while read -r name cat mode cmd; do
+while read -r name cat mode home cmd; do
   [[ -z $name || $name == \#* ]] && continue
-  if [[ $mode != user && $mode != system ]] || [[ -z $cmd ]]; then
-    echo "Skipping malformed line for '$name' (mode must be user or system)" >&2; continue
+  if [[ $mode != user && $mode != system ]] || [[ ! $home =~ ^https?:// ]] || [[ -z $cmd ]]; then
+    echo "Skipping malformed line for '$name' (format: name category user|system homepage-URL command)" >&2; continue
   fi
   if [[ -z ${idx_of[$name]+x} ]]; then
     idx_of[$name]=${#names[@]}
-    names+=("$name"); cats+=("$cat"); ucmd+=(""); scmd+=("")
+    names+=("$name"); cats+=("$cat"); homes+=("$home"); ucmd+=(""); scmd+=("")
   fi
   i=${idx_of[$name]}
   if [[ $mode == user ]]; then ucmd[i]=$cmd; else scmd[i]=$cmd; fi
@@ -114,6 +114,8 @@ for i in "${!names[@]}"; do
   visible+=("$i")
 done
 (( ${#visible[@]} )) || { echo "No tools match${CATEGORY:+ category '$CATEGORY'}${PREF:+ with a $PREF installer}." >&2; exit 1; }
+# default order: by category, then by name
+mapfile -t visible < <(for i in "${visible[@]}"; do printf '%s\t%s\t%s\n' "${cats[$i]}" "${names[$i]}" "$i"; done | LC_ALL=C sort | cut -f3)
 
 mark() { command -v "$1" >/dev/null 2>&1 && printf '✓' || printf ' '; }
 row()  { printf '%s %-16s %-6s %-11s\n' "$(mark "${names[$1]}")" "${names[$1]}" "${cats[$1]}" "$(modes "$1")"; }
@@ -173,6 +175,35 @@ ensure_fzf() {  # 0 = use the fzf picker, 1 = use the numbered menu
   fzf_usable
 }
 
+pick_fzf() {  # prints the chosen tool indices, one per line
+  local dir tab=$'\t' i link pv
+  dir=$(mktemp -d) || return 1
+  trap 'rm -rf "$dir"' RETURN
+  # one row per tool: index, shown text, preview, name (search key), category
+  for i in "${visible[@]}"; do
+    # the preview is %b-escaped by fzf, so \e is ESC and \\ a backslash; the link is OSC 8 (clickable in most terminals)
+    link="\\e]8;;${homes[$i]}\\e\\\\${homes[$i]}\\e]8;;\\e\\\\"
+    pv="homepage: $link\\nuser:   ${ucmd[$i]:-(none)}\\nsystem: ${scmd[$i]:-(none)}"
+    printf '%s\t%s\t%s\t%s\t%s\n' "$i" "$(row "$i")" "$pv" "${names[$i]}" "${cats[$i]}"
+  done > "$dir/rows.tsv"
+  # typing re-runs this: no query shows category then name, a query shows only matching names, sorted by name
+  cat > "$dir/filter.sh" <<'FILTER'
+#!/bin/sh
+dir=$1 q=$2 tab=$(printf '\t')
+if [ -n "$q" ]; then
+  Q=$q LC_ALL=C awk -F '\t' 'index(tolower($4), tolower(ENVIRON["Q"]))' "$dir/rows.tsv" | LC_ALL=C sort -t "$tab" -k4,4
+else
+  LC_ALL=C sort -t "$tab" -k5,5 -k4,4 "$dir/rows.tsv"
+fi
+FILTER
+  LC_ALL=C sort -t "$tab" -k5,5 -k4,4 "$dir/rows.tsv" |
+    fzf --multi --disabled --no-sort --delimiter="$tab" --with-nth=2 --height=80% --reverse "${style[@]}" \
+        --bind "change:reload(sh $(printf %q "$dir/filter.sh") $(printf %q "$dir") {q})" \
+        --header='TAB = select several · ENTER = install · type to search by name · ✓ = installed' \
+        --preview='printf "%b\n" {3}' --preview-window=down,4,wrap \
+    | cut -f1
+}
+
 # --- choose tools: entries are "index" or "index:mode" ---
 chosen=()
 if [[ -n $NAMES ]]; then
@@ -185,15 +216,7 @@ if [[ -n $NAMES ]]; then
     chosen+=("$i${m:+:$m}")
   done
 elif ensure_fzf; then
-  while read -r i _; do [[ -n $i ]] && chosen+=("$i"); done < <(
-    for i in "${visible[@]}"; do
-      printf '%s\t%s\tuser:   %s\\nsystem: %s\n' "$i" "$(row "$i")" "${ucmd[$i]:-(none)}" "${scmd[$i]:-(none)}"
-    done |
-      fzf --multi --delimiter='\t' --with-nth=2 --height=80% --reverse "${style[@]}" \
-          --header='TAB = select several · ENTER = install · ✓ = already installed' \
-          --preview='printf "%b\n" {3}' --preview-window=down,4,wrap \
-      | cut -f1
-  )
+  while read -r i; do [[ -n $i ]] && chosen+=("$i"); done < <(pick_fzf)
 else
   for k in "${!visible[@]}"; do printf '%3d) ' "$((k + 1))"; row "${visible[$k]}"; done
   printf '\nNumbers to install (space-separated, empty to quit): '
