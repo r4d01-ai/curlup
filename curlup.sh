@@ -21,7 +21,7 @@ usage() {
 Usage: curlup.sh [options] [category]
 
   (no options)          interactive picker (fzf if present, numbered menu otherwise)
-  CATEGORY              only show one category: ai lang shell editor cli infra k8s net cloud sec data mobile
+  CATEGORY              only show one category: ai lang shell editor cli infra k8s net cloud sec data browsers
   -m user|system        prefer that install mode; hide tools that don't have it
   -n a,b:system,c:user  install by name; append :user or :system to force a mode
   -l                    list tools and their modes (✓ = already on PATH)
