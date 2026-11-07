@@ -1,6 +1,6 @@
 # curlup
 
-A plain-text list of 14 developer tools, each with its official installer (the project's own `curl | sh` script or an official release download) and its homepage. A picker lets you choose tools and decide, for each one, whether it installs into your home folder or system-wide.
+A plain-text list of 16 developer tools, each with its official installer (the project's own `curl | sh` script or an official release download) and its homepage. A picker lets you choose tools and decide, for each one, whether it installs into your home folder or system-wide.
 
 ## Usage
 
