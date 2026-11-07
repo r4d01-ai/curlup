@@ -125,6 +125,54 @@ if (( LIST )); then
   exit 0
 fi
 
+# --- fzf picker: needs fzf >= FZF_MIN and an fzf that accepts the picker's options.
+# If that's missing, offer to install it; no answer within 5s falls back to the numbered menu.
+FZF_MIN=0.38.0
+fzf_style() {  # fills style=(), the picker's look: Blade Runner amber/teal over synthwave magenta/violet
+  style=(--border=rounded --border-label=' CURLUP // TOOL SELECT ' --border-label-pos=center
+         --prompt='◢ ' --pointer='▶' --marker='◆' --info=inline-right)
+  # NO_COLOR (https://no-color.org) drops the colours and keeps the layout
+  if [[ -z ${NO_COLOR:-} ]]; then
+    style+=(--color='bg:#0b0c1a,bg+:#2a1248,fg:#c9c3d9,fg+:#ffffff,hl:#ff2a6d,hl+:#ff6ac1,info:#7b2ff7,prompt:#ffb000,pointer:#05d9e8,marker:#ffd319,spinner:#05d9e8,header:#ff9f1c,border:#05d9e8,label:#ffb000')
+  fi
+}
+fzf_usable() {  # fzf on PATH, new enough, and accepting the picker's options
+  command -v fzf >/dev/null 2>&1 || return 1
+  local v rc
+  v=$(fzf --version 2>/dev/null | awk '{print $1}')
+  [[ -n $v && $(printf '%s\n' "$FZF_MIN" "$v" | sort -V | head -1) == "$FZF_MIN" ]] || return 1
+  fzf --filter=x "${style[@]}" </dev/null >/dev/null 2>&1; rc=$?
+  (( rc != 2 ))  # fzf exits 2 on a bad option
+}
+install_fzf() {  # install or upgrade fzf with the system package manager
+  local sudo=()
+  if (( EUID != 0 )); then command -v sudo >/dev/null 2>&1 || return 1; sudo=(sudo); fi
+  if command -v brew >/dev/null 2>&1; then brew install fzf
+  elif command -v apt-get >/dev/null 2>&1; then "${sudo[@]}" apt-get update -qq && "${sudo[@]}" apt-get install -y -q fzf
+  elif command -v dnf >/dev/null 2>&1; then "${sudo[@]}" dnf install -y fzf
+  elif command -v pacman >/dev/null 2>&1; then "${sudo[@]}" pacman -S --noconfirm fzf
+  elif command -v apk >/dev/null 2>&1; then "${sudo[@]}" apk add fzf
+  else return 1
+  fi
+}
+ensure_fzf() {  # 0 = use the fzf picker, 1 = use the numbered menu
+  fzf_style
+  fzf_usable && return 0
+  (( YES )) && return 1
+  { : </dev/tty; } 2>/dev/null || return 1
+  if command -v fzf >/dev/null 2>&1; then
+    echo "fzf is older than $FZF_MIN or missing options the picker needs ($(fzf --version 2>/dev/null))." >&2
+  else
+    echo "fzf is not installed." >&2
+  fi
+  printf 'Install or upgrade fzf for the picker? [y/N] (no answer in 5s: plain menu) ' >&2
+  local a=""
+  read -r -t 5 a </dev/tty || { echo >&2; return 1; }
+  [[ $a == [yY]* ]] || return 1
+  install_fzf </dev/tty || { echo "fzf install failed, using the plain menu." >&2; return 1; }
+  fzf_usable
+}
+
 # --- choose tools: entries are "index" or "index:mode" ---
 chosen=()
 if [[ -n $NAMES ]]; then
@@ -136,14 +184,7 @@ if [[ -n $NAMES ]]; then
     if [[ -n $m ]] && ! has_mode "$i" "$m"; then echo "$n has no $m installer (it has: $(modes "$i")), skipped" >&2; continue; fi
     chosen+=("$i${m:+:$m}")
   done
-elif command -v fzf >/dev/null 2>&1; then
-  # retro neon look: Blade Runner amber and teal over synthwave magenta and violet.
-  # NO_COLOR (https://no-color.org) drops the colours and keeps the layout.
-  style=(--border=rounded --border-label=' CURLUP // TOOL SELECT ' --border-label-pos=center
-         --prompt='◢ ' --pointer='▶' --marker='◆' --info=inline-right)
-  if [[ -z ${NO_COLOR:-} ]]; then
-    style+=(--color='bg:#0b0c1a,bg+:#2a1248,fg:#c9c3d9,fg+:#ffffff,hl:#ff2a6d,hl+:#ff6ac1,info:#7b2ff7,prompt:#ffb000,pointer:#05d9e8,marker:#ffd319,spinner:#05d9e8,header:#ff9f1c,border:#05d9e8,label:#ffb000')
-  fi
+elif ensure_fzf; then
   while read -r i _; do [[ -n $i ]] && chosen+=("$i"); done < <(
     for i in "${visible[@]}"; do
       printf '%s\t%s\tuser:   %s\\nsystem: %s\n' "$i" "$(row "$i")" "${ucmd[$i]:-(none)}" "${scmd[$i]:-(none)}"
